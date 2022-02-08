@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+      h1 {
+          text-align: center;
+      }
+
+      p {
+          text-align: center;
+      }
+
+      div {
+          text-align: center;
+      }
+  </style>
+</head>
+<body>
+<h1>All Songs</h1>
+
+
+<h1 class="tracks">
+  <%= form_tag track_path, :method => 'get' do %>
+    <%= text_field_tag :search, params[:search] %>
+    <% submit_tag "Search" %>
+  <% end %>
+  <% @tracks.each do |track| %>
+      <%= form_with(model: current_user.track_relationships.build, remote: true) do |f| %>
+        <div><%= hidden_field_tag :track_id, track.id %></div>
+        <%= f.submit "Add To playlist", class: "btn btn-primary" %>
+      <% end %>
+      <table>
+        <tr>
+          <th style="font-size:50%">Player</th>
+          <th style="font-size:50%">Title</th>
+          <th style="font-size:50%">Artist</th>
+          <th style="font-size:50%">Genre</th>
+        </tr>
+      <td>
+      <img src="<%= image_path track.image_path %>" width="40px" height="40px">
+    <audio controls controlsList="nodownload" >
+    <source src="<%= asset_path track.song_path %>" type="audio/mpeg">
+    Your browser does not support the audio tag.
+    </audio>
+      </td>
+
+    <td style="font-size:50%"><%= track.title %></td>
+    <td style="font-size:50%"><%= track.artist %></td>
+    <td style="font-size:50%"><%= track.genre %></td>
+  </table>
+  <script>
+    function myFunction() {
+        var input, filter,table,tr,td,i,txtValue;
+        input = document.getElementById("myInput");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("myTable");
+        tr= table.getElementsByTagName("tr");
+        for(i=0;i<tr.length;i++){
+            td=tr[i].getElementsByTagName("td")[1];
+            if(td){
+                txtValue = td.textContent || td.innerText;
+                if(txtValue.toUpperCase().indexOf(filter)> -1){
+                    tr[i].style.display = "";
+                }else{
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+  </script>
+    <% end %>
+
+</h1>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= full_title(yield(:title)) %></title>
+  <meta charset="utf-8">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all',
+                          'data-turbolinks-track': 'reload' %>
+  <%= render 'layouts/shim' %>
+</head>
+<% flash.each do |message_type, message| %>
+<%= content_tag(:div, message, class: "alert alert-#{message_type}") %>
+<% end %>
+<body>
+<%= render 'layouts/header' %>
+<div class="container">
+  <%= yield %>
+</div>
+</body>
+</html>

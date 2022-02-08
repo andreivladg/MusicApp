@@ -1,0 +1,92 @@
+<% provide(:title, @user.name) %>
+<%provide(@myTracks) %>
+<%provide(@recommendations) %>
+<head>
+  <style>
+      h1 {
+          text-align: center;
+      }
+
+      p {
+          text-align: center;
+      }
+
+      div {
+          text-align: center;
+      }
+  </style>
+</head>
+<!--sidebar -->
+<% provide(:title, @user.name) %>
+<div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <%= gravatar_for @user %>
+        <%= @user.name %>
+      </h1>
+    </section>
+    <section class="stats">
+      <%= render 'shared/stats' %>
+    </section>
+  </aside>
+</div>
+<div class="tracks">
+  <%= render 'follow_form' if logged_in? %>
+  <% if current_user?(@user) || @current_user.following?(@user) %>
+    <h1><button type = "button" class="btn btn-primary" style="font-size:30%" onclick="showContent(); this.disabled=true">My Songs</button></h1>
+   <% end %>
+  <template>
+  <% @user.tracks.each do |track| %>
+    <div>
+      <h1 style="font-size:200%"><%= track.title %></h1>
+      <h1 style="font-size:200%"><%= track.artist %>
+      </h1>
+      <img src="<%= image_path track.image_path %>" width="60px" height="60px">
+      <audio controls controlsList="nodownload">
+        <source src="<%= asset_path track.song_path %>" type="audio/mpeg">
+        Your browser does not support the audio tag.
+      </audio>
+    </div>
+    <% end %>
+  </template>
+  <% if current_user?(@user)%>
+  <button type="button" class="collapsible">See Recommendations</button>
+  <div class="content">
+    <% @recommendations.each do |track| %>
+        <h1 style="font-size:180%"><%= track.name %></h1>
+        </h1>
+    <% end %>
+  </div>
+  <% end %>
+  <script>
+      function showContent() {
+          var temp = document.getElementsByTagName("template")[0];
+          var clon = temp.content.cloneNode(true);
+          document.body.appendChild(clon);
+      }
+  </script>
+
+  <script>
+      var coll = document.getElementsByClassName("collapsible");
+      var i;
+
+      for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+              this.classList.toggle("active");
+              var content = this.nextElementSibling;
+              if (content.style.display === "block") {
+                  content.style.display = "none";
+              } else {
+                  content.style.display = "block";
+              }
+          });
+      }
+  </script>
+
+  <h1 style="font-size: 200%">
+    <% if current_user?(@user) %>
+  <%= link_to "Add songs", track_path %>
+      <% end %>
+  </h1>
+</div>
